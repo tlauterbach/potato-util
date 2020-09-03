@@ -1,0 +1,20 @@
+{
+  "name": "com.potatointeractive.util",
+  "version": "1.0.0",
+  "displayName": "PotatoUtil",
+  "description": "Potato Interactive's commonly used Unity/C# utilities and helpers.",
+  "unity": "2019.4",
+  "type": "utilities",
+  "dependencies": {},
+  "keywords": [
+    "Unity", "utility", "util"
+  ],
+  "author": {
+    "name": "Terra Lauterbach",
+    "email": "potatointeractive@gmail.com",
+    "url": "https://rottentater.com/"
+  },
+  "publishConfig": {
+    "registry": "https://package.openupm.com"
+  }
+}

@@ -1,0 +1,16 @@
+{
+    "name": "PotatoUtil",
+    "references": [
+        "BeauData",
+        "PcgRandom"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
