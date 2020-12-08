@@ -10,6 +10,11 @@ namespace PotatoUtil {
 	/// </summary>
 	public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
 
+		[SerializeField,Tooltip("If the singleton already exists and is destroyed, " +
+			"does it destroy only the component (FALSE) or will it also destroy " +
+			"the GameObject the component is attached to (TRUE).")]
+		private bool m_destroyGameObject = false;
+
 		protected static T Instance {
 			get {
 				if (IsNull) {
@@ -31,6 +36,8 @@ namespace PotatoUtil {
 			if (m_instance == null) {
 				m_instance = this as T;
 				OnAwake();
+			} else if (m_destroyGameObject) {
+				Destroy(gameObject);
 			} else {
 				Destroy(this);
 			}
