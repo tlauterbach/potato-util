@@ -10,6 +10,14 @@ namespace PotatoUtil {
 	/// </summary>
 	public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
 
+		/// <summary>
+		/// Returns whether there is no active singleton (TRUE) 
+		/// or if one is active and assigned (FALSE)
+		/// </summary>
+		public static bool IsNull {
+			get { return m_instance == null; }
+		}
+
 		[SerializeField,Tooltip("If the singleton already exists and is destroyed, " +
 			"does it destroy only the component (FALSE) or will it also destroy " +
 			"the GameObject the component is attached to (TRUE).")]
@@ -27,10 +35,6 @@ namespace PotatoUtil {
 			}
 		}
 		private static T m_instance = null;
-
-		protected static bool IsNull {
-			get { return m_instance == null; }
-		}
 
 		private void Awake() {
 			if (m_instance == null) {
