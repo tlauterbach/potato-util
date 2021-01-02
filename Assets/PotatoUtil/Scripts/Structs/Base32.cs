@@ -97,7 +97,7 @@ namespace PotatoUtil {
 			return new Base32(ParseUInt64(value));
 		}
 		public static ulong ParseUInt64(string value) {
-			if (value.Length == STRING_MAX) {
+			if (value.Length != STRING_MAX) {
 				throw new ArgumentException(string.Format("String must be " +
 					"exactly {0} characters long.", STRING_MAX
 				));
