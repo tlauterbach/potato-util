@@ -8,8 +8,8 @@ namespace PotatoUtil {
 	/// A simple, wrapped implementation of the IReadOnlyList<typeparamref name="T"/> 
 	/// interface that has more practical construction options
 	/// </summary>
-	public class IndexedSet<T> : IReadOnlyList<T> {
-		
+	public class IndexedSet<T> : IReadOnlyList<T> where T : IEquatable<T> {
+
 		public T this[int index] {
 			get {
 				if (index < 0 || index >= Count) {
@@ -40,6 +40,14 @@ namespace PotatoUtil {
 
 		public int IndexOf(T item) {
 			return Array.IndexOf(m_set, item);
+		}
+		public bool Contains(T item) {
+			for (int index = 0; index < m_set.Length; index++) {
+				if (m_set[index].Equals(item)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public IEnumerator<T> GetEnumerator() {

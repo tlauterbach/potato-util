@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2021-01-26
+### Added
+- `IndexedSet<T>` now has a function for polling the set for containing an item (`bool Contains(T item)`)
+- acknowledgement that PotatoUtil is available on [openupm.com](https://openupm.com)
+
+### Changed
+- `IndexedSet<T>` now requires its generic type implement `IEquatable<T>` so that checks can compare equality
+
 ## [1.6.0] - 2021-01-22
 ### Added
 - `WrappedAttribute` and `WrappedAttributeDrawer` to draws an Inspector/Editor `string` field as wrapped instead of simply overflowing the box width (which is the default unity behaviour).
