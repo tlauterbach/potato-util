@@ -1,4 +1,4 @@
-﻿namespace Priority_Queue
+﻿namespace PotatoUtil
 {
     public class GenericPriorityQueueNode<TPriority>
     {

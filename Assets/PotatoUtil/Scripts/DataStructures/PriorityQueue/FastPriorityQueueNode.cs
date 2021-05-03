@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Priority_Queue
+namespace PotatoUtil
 {
     public class FastPriorityQueueNode
     {
