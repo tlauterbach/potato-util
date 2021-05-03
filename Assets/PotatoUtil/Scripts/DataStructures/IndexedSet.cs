@@ -18,6 +18,14 @@ namespace PotatoUtil {
 				return m_set[index];
 			}
 		}
+		public T this[uint index] {
+			get {
+				if (index < 0 || index >= Count) {
+					throw new IndexOutOfRangeException();
+				}
+				return m_set[index];
+			}
+		}
 
 		public int Count { get { return m_set.Length; } }
 

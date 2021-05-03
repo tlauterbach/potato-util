@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.8.0] - 2021-05-21
+## [1.9.0] - 2021-05-02
+### Added
+- `uint` indexer getter to `IndexedSet<T>`
+- `SceneReference` class that can serialize a string reference to a Scene Asset from the inspector and allow addition to the project's scene list
+
+## [1.8.0] - 2021-05-02
 ### Added
 - `Messenger` class that can have `Message` and `Message<T>` registered to it and broadcast
 - `SortedAction` data structure that allows prioritization of actions registered to it upon invocation
