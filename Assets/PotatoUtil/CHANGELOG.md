@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2021-05-21
+### Added
+- `Messenger` class that can have `Message` and `Message<T>` registered to it and broadcast
+- `SortedAction` data structure that allows prioritization of actions registered to it upon invocation
+
 ## [1.7.0] - 2021-01-26
 ### Added
 - `IndexedSet<T>` now has a function for polling the set for containing an item (`bool Contains(T item)`)
