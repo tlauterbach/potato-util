@@ -1,6 +1,6 @@
 {
   "name": "com.potatointeractive.util",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "displayName": "PotatoUtil",
   "description": "Potato Interactive's commonly used Unity/C# utilities and helpers.",
   "unity": "2019.4",
