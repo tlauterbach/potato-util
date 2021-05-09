@@ -1,5 +1,6 @@
 ﻿using BeauData;
 using System;
+using UnityEngine;
 
 namespace PotatoUtil {
 
@@ -8,10 +9,12 @@ namespace PotatoUtil {
 	/// Fowler-Noll-Vo hashing algorthim.
 	/// http://www.isthe.com/chongo/tech/comp/fnv/
 	/// </summary>
+	[Serializable]
 	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint>, ISerializedProxy<uint> {
 
 		public static readonly FNVHash Empty = new FNVHash();
 
+		[SerializeField]
 		private uint m_hash;
 
 		private const uint PRIME = 16777619u;
