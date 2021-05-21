@@ -90,10 +90,10 @@ namespace PotatoUtil {
 			m_registry = new Dictionary<IMessage, IEntry>();
 		}
 
-		public void Register(Message message, Action handler, int priority) {
+		public void Register(Message message, Action handler, int priority = 0) {
 			GetEntry(message).Register(handler, priority);
 		}
-		public void Register<T>(Message<T> message, Action<T> handler, int priority) {
+		public void Register<T>(Message<T> message, Action<T> handler, int priority = 0) {
 			GetEntry(message).Register(handler, priority);
 		}
 
