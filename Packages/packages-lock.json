@@ -1,14 +1,14 @@
 {
   "dependencies": {
     "com.beauprime.beaudata": {
-      "version": "0.3.0",
+      "version": "0.3.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
     "com.potatointeractive.pcg": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {},

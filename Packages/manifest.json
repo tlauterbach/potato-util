@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "com.beauprime.beaudata": "0.3.0",
-    "com.potatointeractive.pcg": "1.1.0",
+    "com.beauprime.beaudata": "0.3.1",
+    "com.potatointeractive.pcg": "1.2.0",
     "com.unity.ugui": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",
     "com.unity.modules.unitywebrequestwww": "1.0.0"
