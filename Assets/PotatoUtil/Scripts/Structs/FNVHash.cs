@@ -53,6 +53,15 @@ namespace PotatoUtil {
 		public static implicit operator int(FNVHash obj) {
 			return unchecked((int)obj.m_hash);
 		}
+		public static implicit operator FNVHash(string value) {
+			return new FNVHash(value);
+		}
+		public static implicit operator FNVHash(uint value) {
+			return new FNVHash(value);
+		}
+		public static implicit operator FNVHash(int value) {
+			return new FNVHash(value);
+		}
 
 		public override bool Equals(object obj) {
 			if (obj == null || !(obj is FNVHash)) {
