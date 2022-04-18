@@ -18,6 +18,9 @@ namespace PotatoUtil {
 		public static bool operator !=(Message lhs, Message rhs) {
 			return !lhs.Equals(rhs);
 		}
+		public static implicit operator Message(string obj) {
+			return new Message(obj);
+		}
 		public override bool Equals(object obj) {
 			if (obj is Message message) {
 				return Equals(message);
@@ -45,6 +48,7 @@ namespace PotatoUtil {
 		private interface IEntry {
 			bool TryGetAs(out Entry entry);
 			bool TryGetAs<T>(out Entry<T> entry);
+			void Clear();
 		}
 		private class Entry : IEntry {
 			private SortedAction m_actions;
@@ -122,8 +126,8 @@ namespace PotatoUtil {
 		public void DeregisterAll(Message message) {
 			GetEntry(message).Clear();
 		}
-		public void DeregisterAll<T>(Message message) {
-			GetEntry(message).Clear();
+		public void DeregisterAll() {
+			m_registry.Clear();
 		}
 
 		public void Broadcast(Message message) {
