@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2022-04-18
+### Added
+- developer can implicitly convert `string` to `Message`
+- developer can clear entire `Messenger` with call to `DeregisterAll`
+### Fixed
+- issue where clearing `Messenger` would fail to do type conversion
+
 ## [2.0.0] - 2022-04-18
 ### Changed
 - `Messenger` system now uses simplified `Message` struct instead of class, removed use of `Message<T>` in favor of struct
