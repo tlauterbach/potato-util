@@ -1,5 +1,4 @@
-﻿using BeauData;
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace PotatoUtil {
@@ -10,7 +9,7 @@ namespace PotatoUtil {
 	/// http://www.isthe.com/chongo/tech/comp/fnv/
 	/// </summary>
 	[Serializable]
-	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint>, ISerializedProxy<uint> {
+	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint> {
 
 		public static readonly FNVHash Empty = new FNVHash();
 
@@ -26,6 +25,7 @@ namespace PotatoUtil {
 				m_hash ^= c;
 				m_hash *= PRIME;
 			}
+			HashLookup.Register(this, str);
 		}
 		public FNVHash(SubString str) {
 			m_hash = OFFSET;
@@ -33,12 +33,7 @@ namespace PotatoUtil {
 				m_hash ^= c;
 				m_hash *= PRIME;
 			}
-		}
-		public FNVHash(int integer) {
-			m_hash = (uint)integer;
-		}
-		public FNVHash(uint integer) {
-			m_hash = integer;
+			HashLookup.Register(this, str.ToString());
 		}
 
 		public static bool operator ==(FNVHash lhs, FNVHash rhs) {
@@ -54,12 +49,6 @@ namespace PotatoUtil {
 			return unchecked((int)obj.m_hash);
 		}
 		public static implicit operator FNVHash(string value) {
-			return new FNVHash(value);
-		}
-		public static implicit operator FNVHash(uint value) {
-			return new FNVHash(value);
-		}
-		public static implicit operator FNVHash(int value) {
 			return new FNVHash(value);
 		}
 
@@ -82,17 +71,9 @@ namespace PotatoUtil {
 			return (int)m_hash;
 		}
 		public override string ToString() {
-			return m_hash.ToString();
+			return HashLookup.ToString(this);
 		}
 
-		public uint GetProxyValue(ISerializerContext inContext) {
-			return m_hash;
-		}
-
-		public void SetProxyValue(uint inValue, ISerializerContext inContext) {
-			m_hash = inValue;
-		}
 	}
-
 
 }
