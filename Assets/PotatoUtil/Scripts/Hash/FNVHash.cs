@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using BeauData;
+using System;
 
 namespace PotatoUtil {
 
@@ -8,12 +8,10 @@ namespace PotatoUtil {
 	/// Fowler-Noll-Vo hashing algorthim.
 	/// http://www.isthe.com/chongo/tech/comp/fnv/
 	/// </summary>
-	[Serializable]
-	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint> {
+	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint>, ISerializedProxy<uint> {
 
 		public static readonly FNVHash Empty = new FNVHash();
 
-		[SerializeField]
 		private uint m_hash;
 
 		private const uint PRIME = 16777619u;
@@ -35,6 +33,12 @@ namespace PotatoUtil {
 			}
 			HashLookup.Register(this, str.ToString());
 		}
+		public FNVHash(uint hash) {
+			m_hash = hash;
+		}
+		public FNVHash(int hash) {
+			m_hash = (uint)hash;
+		}
 
 		public static bool operator ==(FNVHash lhs, FNVHash rhs) {
 			return lhs.Equals(rhs);
@@ -49,6 +53,12 @@ namespace PotatoUtil {
 			return unchecked((int)obj.m_hash);
 		}
 		public static implicit operator FNVHash(string value) {
+			return new FNVHash(value);
+		}
+		public static implicit operator FNVHash(uint value) {
+			return new FNVHash(value);
+		}
+		public static implicit operator FNVHash(int value) {
 			return new FNVHash(value);
 		}
 
@@ -74,6 +84,13 @@ namespace PotatoUtil {
 			return HashLookup.ToString(this);
 		}
 
+		public uint GetProxyValue(ISerializerContext inContext) {
+			return m_hash;
+		}
+
+		public void SetProxyValue(uint inValue, ISerializerContext inContext) {
+			m_hash = inValue;
+		}
 	}
 
 }
