@@ -63,10 +63,15 @@ namespace PotatoUtil {
 		}
 
 		public override bool Equals(object obj) {
-			if (obj == null || !(obj is FNVHash)) {
+			if (obj is FNVHash hash) {
+				return Equals(hash);
+			} else if (obj is int integer) {
+				return Equals(integer);
+			} else if (obj is uint unsigned) {
+				return Equals(unsigned);
+			} else {
 				return false;
 			}
-			return Equals((FNVHash)obj);
 		}
 		public bool Equals(uint other) {
 			return m_hash == other;

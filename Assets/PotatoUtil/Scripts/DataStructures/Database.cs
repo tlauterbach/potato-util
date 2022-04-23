@@ -3,37 +3,45 @@ using System.Collections.Generic;
 
 namespace PotatoUtil {
 
-	public class Database {
+	public class Database<TKey> where TKey : IEquatable<FNVHash> {
 
 		#region Classes
 
 		private interface IDb {
-			FNVHash Id { get; }
 			string Name { get; }
 			int Count { get; }
-			bool Contains(FNVHash id);
-			object Get(FNVHash id);
-			void Add(FNVHash id, object item);
-			IEnumerable<FNVHash> GetAllIds();
+			bool Contains(TKey id);
+			object Get(TKey id);
+			void Add(TKey id, object item);
+			IEnumerable<TKey> GetAllIds();
 		}
-		private class Db<T> : IDb {
 
-			public FNVHash Id { get; }
+		private class HashComparer : EqualityComparer<TKey> {
+			public override bool Equals(TKey x, TKey y) {
+				return x.Equals(y);
+			}
+			public override int GetHashCode(TKey obj) {
+				return obj.GetHashCode();
+			}
+		}
+
+		private class Db<TValue> : IDb {
+
 			public string Name { get; }
 			public int Count { get { return m_items.Count; } }
 
-			Dictionary<FNVHash, T> m_items = new Dictionary<FNVHash, T>();
+			Dictionary<TKey, TValue> m_items = new Dictionary<TKey,TValue>();
 
-			public Db(string name) {
-				Name = name;
-				Id = name;
+			public Db(FNVString name) {
+				Name = name.ToString();
+				m_items = new Dictionary<TKey, TValue>(new HashComparer());
 			}
 
-			public bool Contains(FNVHash hash) {
+			public bool Contains(TKey hash) {
 				return m_items.ContainsKey(hash);
 			}
-			public object Get(FNVHash id) {
-				if (m_items.TryGetValue(id, out T value)) {
+			public object Get(TKey id) {
+				if (m_items.TryGetValue(id, out TValue value)) {
 					return value;
 				} else {
 					throw new KeyNotFoundException(string.Format(
@@ -42,8 +50,8 @@ namespace PotatoUtil {
 					));
 				}
 			}
-			public void Add(FNVHash id, object item) {
-				if (item is T obj) {
+			public void Add(TKey id, object item) {
+				if (item is TValue obj) {
 					if (!m_items.ContainsKey(id)) {
 						m_items.Add(id, obj);
 					} else {
@@ -55,12 +63,12 @@ namespace PotatoUtil {
 				} else {
 					throw new InvalidOperationException(string.Format(
 						"Database `{0}' cannot convert id `{1}' from `{2}' to `{3}'",
-						Name, id, item.GetType().Name, typeof(T).Name
+						Name, id, item.GetType().Name, typeof(TValue).Name
 					));
 				}
 			}
-			public IEnumerable<FNVHash> GetAllIds() {
-				foreach (FNVHash key in m_items.Keys) {
+			public IEnumerable<TKey> GetAllIds() {
+				foreach (TKey key in m_items.Keys) {
 					yield return key;
 				}
 			}
@@ -69,12 +77,12 @@ namespace PotatoUtil {
 
 		#endregion
 
-		private Dictionary<FNVHash, IDb> m_database = new Dictionary<FNVHash, IDb>();
+		private Dictionary<FNVString, IDb> m_database = new Dictionary<FNVString, IDb>();
 
-		public void Add<T>(string db, IEnumerable<T> dataset, Func<T,FNVHash> hashGetter) {
+		public void Add<TValue>(FNVString db, IEnumerable<TValue> dataset, Func<TValue,TKey> hashGetter) {
 			if (!m_database.ContainsKey(db)) {
-				Db<T> database = new Db<T>(db);
-				foreach (T item in dataset) {
+				Db<TValue> database = new Db<TValue>(db);
+				foreach (TValue item in dataset) {
 					database.Add(hashGetter(item), item);
 				}
 			} else {
@@ -83,7 +91,7 @@ namespace PotatoUtil {
 				));
 			}
 		}
-		public void Remove(string db) {
+		public void Remove(FNVString db) {
 			m_database.Remove(db);
 		}
 
@@ -91,26 +99,26 @@ namespace PotatoUtil {
 			m_database.Clear();
 		}
 
-		public T Get<T>(string db, FNVHash id) {
+		public TValue Get<TValue>(FNVString db, TKey id) {
 			if (m_database.ContainsKey(db)) {
-				return (T)m_database[db].Get(id);
+				return (TValue)m_database[db].Get(id);
 			} else {
 				throw new KeyNotFoundException(string.Format(
 					"No Database with name `{0}' exists", db
 				));
 			}
 		}
-		public bool Contains(string db) {
+		public bool Contains(FNVString db) {
 			return m_database.ContainsKey(db);
 		}
-		public bool Contains(string db, FNVHash id) {
+		public bool Contains(FNVString db, TKey id) {
 			if (m_database.ContainsKey(db)) {
 				return m_database[db].Contains(id);
 			} else {
 				return false;
 			}
 		}
-		public IEnumerable<FNVHash> GetAllIds(string db) {
+		public IEnumerable<TKey> GetAllIds(FNVString db) {
 			if (m_database.ContainsKey(db)) {
 				return m_database[db].GetAllIds();
 			} else {
