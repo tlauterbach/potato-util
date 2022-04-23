@@ -11,6 +11,11 @@ namespace PotatoUtil {
 
 		public ushort Version { get { return 1; } }
 
+		/// <summary>
+		/// Notice that I and O are missing from the
+		/// set since they appear similar to 1 and 0
+		/// in some fonts
+		/// </summary>
 		private const string BASE_32 = "0123456789ABCDEFGHJKLMNPQRSTUVWX";
 		private const ulong LENGTH = 32;
 		private const ushort STRING_MAX = 13;
