@@ -80,15 +80,22 @@ namespace PotatoUtil {
 		private Dictionary<FNVString, IDb> m_database = new Dictionary<FNVString, IDb>();
 
 		public void Add<TValue>(FNVString db, IEnumerable<TValue> dataset, Func<TValue,TKey> hashGetter) {
-			if (!m_database.ContainsKey(db)) {
-				Db<TValue> database = new Db<TValue>(db);
-				foreach (TValue item in dataset) {
-					database.Add(hashGetter(item), item);
-				}
+			IDb database;
+			if (m_database.ContainsKey(db)) {
+				database = m_database[db];
 			} else {
-				throw new Exception(string.Format(
-					"Database with name `{0}' already exists", db
-				));
+				database = new Db<TValue>(db);
+				m_database.Add(db, database);
+			}
+			foreach (TValue item in dataset) {
+				TKey hash = hashGetter(item);
+				if (database.Contains(hash)) {
+					throw new Exception(string.Format(
+						"Database `{0}' already contains key `{1}'",
+						db, hash.ToString()
+					));
+				}
+				database.Add(hashGetter(item), item);
 			}
 		}
 		public void Remove(FNVString db) {
