@@ -115,6 +115,17 @@ namespace PotatoUtil {
 				));
 			}
 		}
+
+		public int GetCount(FNVString db) {
+			if (m_database.ContainsKey(db)) {
+				return m_database[db].Count;
+			} else {
+				throw new KeyNotFoundException(string.Format(
+					"No Database with name `{0}' exists", db
+				));
+			}
+		}
+
 		public bool Contains(FNVString db) {
 			return m_database.ContainsKey(db);
 		}
