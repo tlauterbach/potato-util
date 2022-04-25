@@ -23,6 +23,9 @@ namespace PotatoUtil {
 
 		public int Available { get { return m_available.Count; } }
 
+		public event Action<T> OnTaken;
+		public event Action<T> OnReleased;
+
 		public Pool(byte size, Func<T> constructor) {
 			m_available = new List<T>();
 			while (size > 0) {
@@ -37,6 +40,7 @@ namespace PotatoUtil {
 				T item = m_available[0];
 				m_taken.Add(item);
 				m_available.Remove(item);
+				OnTaken?.Invoke(item);
 				return item;
 			} else {
 				throw new InvalidOperationException("All items in the pool " +
@@ -48,6 +52,7 @@ namespace PotatoUtil {
 			if (m_taken.Contains(value)) {
 				m_taken.Remove(value);
 				m_available.Add(value);
+				OnReleased?.Invoke(value);
 			} else {
 				throw new InvalidOperationException("Trying to release item " +
 					"to the pool that did not originate from this pool!"
