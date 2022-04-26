@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace PotatoUtil {
 
-	public class ServiceCache {
+	public class ServiceCache : IServiceProvider {
 
 		private Dictionary<Type, IService> m_cache;
 
@@ -14,15 +14,14 @@ namespace PotatoUtil {
 		}
 
 		public void Register(IService service) {
-			Type key = FindInterface(service.GetType());
-			if (m_cache.ContainsKey(key)) {
+			if (m_cache.ContainsKey(service.Key)) {
 				throw new Exception(string.Format(
 					"Service of type `{0}' is already " +
 					"registered to the ServiceCache.",
-					key.Name
+					service.Key.Name
 				));
 			} else {
-				m_cache.Add(key, service);
+				m_cache.Add(service.Key, service);
 				service.OnServiceRegistered();
 			}
 		}
@@ -39,9 +38,15 @@ namespace PotatoUtil {
 			}
 		}
 		public void Deregister(IService service) {
-			Type key = FindInterface(service.GetType());
-			if (m_cache.ContainsKey(key)) {
-				m_cache.Remove(key);
+			if (m_cache.ContainsKey(service.Key)) {
+				m_cache.Remove(service.Key);
+				service.OnServiceDeregistered();
+			}
+		}
+		public void Deregister(Type type) {
+			if (m_cache.ContainsKey(type)) {
+				IService service = m_cache[type];
+				m_cache.Remove(type);
 				service.OnServiceDeregistered();
 			}
 		}
@@ -52,9 +57,8 @@ namespace PotatoUtil {
 			return (T)Get(typeof(T));
 		}
 		public IService Get(Type type) {
-			Type key = FindInterface(type);
-			if (m_cache.ContainsKey(key)) {
-				return m_cache[key];
+			if (m_cache.ContainsKey(type)) {
+				return m_cache[type];
 			} else {
 				return null;
 			}
@@ -64,25 +68,9 @@ namespace PotatoUtil {
 			return service != null;
 		}
 
-
-		private Type FindInterface(Type type) {
-			Type[] interfaces = type.GetInterfaces();
-			Type interfaceType = null;
-			foreach (Type item in interfaces) {
-				if (item.BaseType == typeof(IService)) {
-					interfaceType = item;
-					break;
-				}
-			}
-			if (interfaceType == null) {
-				throw new Exception(string.Format(
-					"Type `{0}' does not inherit " +
-					"from IService.",type.Name
-				));
-			}
-			return interfaceType;
-		} 
-
+		object IServiceProvider.GetService(Type serviceType) {
+			return Get(serviceType);
+		}
 	}
 
 }
