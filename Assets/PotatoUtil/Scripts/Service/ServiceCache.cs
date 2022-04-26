@@ -59,6 +59,10 @@ namespace PotatoUtil {
 				return null;
 			}
 		}
+		public bool Get<T>(out T service) where T : IService {
+			service = Get<T>();
+			return service != null;
+		}
 
 
 		private Type FindInterface(Type type) {
