@@ -18,8 +18,9 @@ namespace PotatoUtil.Editor {
 				m_style = new GUIStyle(GUI.skin.textField);
 				m_style.wordWrap = true;
 			}
+			position = EditorGUI.PrefixLabel(position, label);
 			string value = property.stringValue;
-			property.stringValue = EditorGUI.TextField(position, label, property.stringValue, m_style);
+			property.stringValue = EditorGUI.TextArea(position, property.stringValue, m_style);
 			if (value != property.stringValue) {
 				property.serializedObject.ApplyModifiedProperties();
 			}

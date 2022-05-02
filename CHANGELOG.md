@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2022-05-02
+### Added
+- `Wrapped` property drawer now shows and allows return characters for strings it modifies
+
 ## [2.8.3] - 2022-04-26
 ### Added
 - `IService` now requires a `Type` key property
