@@ -1,8 +1,8 @@
 {
     "name": "PotatoUtil",
     "references": [
-        "BeauData",
-        "PcgRandom"
+        "PcgRandom",
+        "PotatoSerializer"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

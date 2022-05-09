@@ -1,4 +1,4 @@
-﻿using BeauData;
+﻿using PotatoSerializer;
 using System;
 
 namespace PotatoUtil {
@@ -8,7 +8,7 @@ namespace PotatoUtil {
 	/// serialize the string value originally given
 	/// to the struct.
 	/// </summary>
-	public struct FNVString : IEquatable<FNVString>, IEquatable<FNVHash>, ISerializedProxy<string> {
+	public struct FNVString : IEquatable<FNVString>, IEquatable<FNVHash>, ISerialProxy<string> {
 
 		public static readonly FNVString Empty = new FNVString();
 
@@ -55,10 +55,10 @@ namespace PotatoUtil {
 			return m_string;
 		}
 
-		public string GetProxyValue(ISerializerContext inContext) {
+		public string GetSerialProxy() {
 			return m_string;
 		}
-		public void SetProxyValue(string inValue, ISerializerContext inContext) {
+		public void SetSerialProxy(string inValue) {
 			m_string = inValue;
 			m_hash = new FNVHash(inValue);
 		}

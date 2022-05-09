@@ -1,15 +1,14 @@
-﻿using BeauData;
+﻿using PotatoSerializer;
 using PcgRandom;
 using System;
-using UnityEngine;
 
 namespace PotatoUtil {
 
 	/// <summary>
-	/// BeauData serialization-compatible wrapper of 
+	/// PotatoSerializer compatible wrapper of 
 	/// the Pcg randomizer.
 	/// </summary>
-	public class Randomizer : Pcg, ISerializedObject, ISerializedVersion, ISerializedProxy<string> {
+	public class Randomizer : Pcg, ISerialObject {
 
 		public ushort Version { get { return 1; } }
 
@@ -25,28 +24,16 @@ namespace PotatoUtil {
 			Seed(~(ulong)seedTime.Ticks, seq);
 		}
 
-		public void Serialize(Serializer ioSerializer) {
+		public void Serialize(ISerializer ioSerializer) {
 			ioSerializer.Serialize("inc", ref m_inc);
 			ioSerializer.Serialize("state", ref m_state);
 		}
 
-		public string GetProxyValue(ISerializerContext inContext) {
-			return ToString();
-		}
-
-		public void SetProxyValue(string inValue, ISerializerContext inContext) {
-			string[] split = inValue.Split('-');
-			if (split.Length != 2 || split[0].Length != 13 || split[1].Length != 13) {
-				throw new ArgumentException(string.Format("String `{0}' cannot be " +
-					"converted to a Randomizer state!", inValue), nameof(inValue)
-				);
-			}
-			m_inc = Base32.ParseUInt64(split[0]);
-			m_state = Base32.ParseUInt64(split[1]);
-		}
-
 		public override string ToString() {
-			return string.Format("{0}-{1}", new Base32(m_inc), new Base32(m_state));
+			return string.Format("{0}-{1}", 
+				Convert.ToBase64String(BitConverter.GetBytes(m_inc)).Replace("=",""), 
+				Convert.ToBase64String(BitConverter.GetBytes(m_state)).Replace("=","")
+			);
 		}
 
 	}

@@ -1,16 +1,13 @@
 {
   "name": "com.potatointeractive.util",
-  "version": "2.9.0",
+  "version": "3.0.0",
   "displayName": "PotatoUtil",
   "description": "Potato Interactive's commonly used Unity/C# utilities and helpers.",
   "unity": "2019.4",
   "type": "utilities",
   "dependencies": {
-    "com.unity.modules.imgui": "1.0.0",
-    "com.unity.ugui": "1.0.0",
-    "com.unity.modules.unitywebrequestwww": "1.0.0",
     "com.potatointeractive.pcg": "1.1.0",
-    "com.beauprime.beaudata": "0.3.0"
+    "com.potatointeractive.serializer": "1.0.0"
   },
   "keywords": [
     "Unity", "utility", "util"

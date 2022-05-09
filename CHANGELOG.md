@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2022-05-09
+### Added
+- dependency to `PotatoSerializer`
+- usage of `PotatoSerializer` on `Randomizer`, `FNVHash`, and `FNVString`
+### Removed
+- dependency to `BeauData` (in favor of using `PotatoSerializer`)
+- usage of `Base32` struct that was not very useful for functionality
+
 ## [2.9.0] - 2022-05-02
 ### Added
 - `Wrapped` property drawer now shows and allows return characters for strings it modifies

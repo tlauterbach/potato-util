@@ -26,6 +26,10 @@ public class test : MonoBehaviour {
 		m_serviceCache = new ServiceCache();
 		m_serviceCache.Register(new MyService());
 		m_serviceCache.Deregister(typeof(IMyService));
+
+		Randomizer randomizer = new Randomizer();
+		Debug.Log(randomizer.ToString());
+
 	}
 
 }
