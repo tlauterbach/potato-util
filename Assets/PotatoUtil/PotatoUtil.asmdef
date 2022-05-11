@@ -1,9 +1,6 @@
 {
     "name": "PotatoUtil",
-    "references": [
-        "PcgRandom",
-        "PotatoSerializer"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
