@@ -1,5 +1,4 @@
-﻿using PotatoSerializer;
-using System;
+﻿using System;
 
 namespace PotatoUtil {
 
@@ -8,7 +7,7 @@ namespace PotatoUtil {
 	/// Fowler-Noll-Vo hashing algorthim.
 	/// http://www.isthe.com/chongo/tech/comp/fnv/
 	/// </summary>
-	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint>, ISerialProxy<uint> {
+	public struct FNVHash : IEquatable<FNVHash>, IEquatable<int>, IEquatable<uint> {
 
 		public static readonly FNVHash Empty = new FNVHash();
 
@@ -89,13 +88,6 @@ namespace PotatoUtil {
 			return HashLookup.ToString(this);
 		}
 
-		public uint GetSerialProxy() {
-			return m_hash;
-		}
-
-		public void SetSerialProxy(uint value) {
-			m_hash = value;
-		}
 	}
 
 }

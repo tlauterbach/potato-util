@@ -1,13 +1,11 @@
 {
   "name": "com.potatointeractive.util",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "displayName": "PotatoUtil",
   "description": "Potato Interactive's commonly used Unity/C# utilities and helpers.",
   "unity": "2019.4",
   "type": "utilities",
   "dependencies": {
-    "com.potatointeractive.pcg": "1.1.0",
-    "com.potatointeractive.serializer": "1.0.0"
   },
   "keywords": [
     "Unity", "utility", "util"
