@@ -3,7 +3,7 @@ Potato Interactive's commonly used utilities and helpers for Unity/C#
 
 | Package Name | Package Version | Unity Version |
 |-----|-----|-----|
-| com.potatointeractive.util | 3.0.3 | 2019.4.x |
+| com.potatointeractive.util | 3.1.0 | 2019.4.x |
 
 [Changelog](CHANGELOG.md)
 

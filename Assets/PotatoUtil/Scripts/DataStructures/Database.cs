@@ -3,18 +3,7 @@ using System.Collections.Generic;
 
 namespace PotatoUtil {
 
-	public class Database<TKey> where TKey : IEquatable<FNVHash> {
-
-		#region Classes
-
-		private interface IDb {
-			string Name { get; }
-			int Count { get; }
-			bool Contains(TKey id);
-			object Get(TKey id);
-			void Add(TKey id, object item);
-			IEnumerable<TKey> GetAllIds();
-		}
+	public class Database<TKey, TVal> where TKey : IEquatable<TKey> where TVal : class {
 
 		private class HashComparer : EqualityComparer<TKey> {
 			public override bool Equals(TKey x, TKey y) {
@@ -25,125 +14,103 @@ namespace PotatoUtil {
 			}
 		}
 
-		private class Db<TValue> : IDb {
-
-			public string Name { get; }
-			public int Count { get { return m_items.Count; } }
-
-			Dictionary<TKey, TValue> m_items = new Dictionary<TKey,TValue>();
-
-			public Db(FNVString name) {
-				Name = name.ToString();
-				m_items = new Dictionary<TKey, TValue>(new HashComparer());
-			}
-
-			public bool Contains(TKey hash) {
-				return m_items.ContainsKey(hash);
-			}
-			public object Get(TKey id) {
-				if (m_items.TryGetValue(id, out TValue value)) {
-					return value;
-				} else {
-					throw new KeyNotFoundException(string.Format(
-						"No item with id `{0}' exists in Database `{1}'.",
-						id, Name
-					));
-				}
-			}
-			public void Add(TKey id, object item) {
-				if (item is TValue obj) {
-					if (!m_items.ContainsKey(id)) {
-						m_items.Add(id, obj);
-					} else {
-						throw new Exception(string.Format(
-							"Database `{0}' already contains item with id `{1}'",
-							Name, id
-						));
-					}
-				} else {
-					throw new InvalidOperationException(string.Format(
-						"Database `{0}' cannot convert id `{1}' from `{2}' to `{3}'",
-						Name, id, item.GetType().Name, typeof(TValue).Name
-					));
-				}
-			}
-			public IEnumerable<TKey> GetAllIds() {
-				foreach (TKey key in m_items.Keys) {
+		public int Count {
+			get { return m_database.Count; }
+		}
+		public IEnumerable<TKey> Keys {
+			get {
+				foreach (TKey key in m_database.Keys) {
 					yield return key;
 				}
 			}
+		}
+		public IEnumerable<TVal> Values {
+			get {
+				foreach (TVal value in m_database.Values) {
+					yield return value;
+				}
+			}
+		}
+		public TVal this[TKey key] {
+			get { return Get(key); }
+		}
+
+		private Dictionary<TKey, TVal> m_database;
+		private readonly Func<TVal, TKey> m_keyGetter;
+
+		#region Constructors
+
+		public Database(Func<TVal, TKey> hashGetter) {
+			m_database = new Dictionary<TKey, TVal>(new HashComparer());
+			m_keyGetter = hashGetter;
+		}
+		public Database(Func<TVal, TKey> hashGetter, IEnumerable<TVal> values) : this(hashGetter) {
+			Add(values);
+		}
+		public Database(Func<TVal, TKey> hashGetter, params TVal[] values) : this(hashGetter, (IEnumerable<TVal>)values) {
 
 		}
 
 		#endregion
 
-		private Dictionary<FNVString, IDb> m_database = new Dictionary<FNVString, IDb>();
-
-		public void Add<TValue>(FNVString db, IEnumerable<TValue> dataset, Func<TValue,TKey> hashGetter) {
-			IDb database;
-			if (m_database.ContainsKey(db)) {
-				database = m_database[db];
-			} else {
-				database = new Db<TValue>(db);
-				m_database.Add(db, database);
+		public void Add(TVal value) {
+			TKey key = m_keyGetter(value);
+			if (m_database.ContainsKey(key)) {
+				throw new InvalidOperationException(string.Format(
+					"Value with Key `{0}' already exists " +
+					"in the Database", key.ToString()
+				));
 			}
-			foreach (TValue item in dataset) {
-				TKey hash = hashGetter(item);
-				if (database.Contains(hash)) {
-					throw new Exception(string.Format(
-						"Database `{0}' already contains key `{1}'",
-						db, hash.ToString()
-					));
-				}
-				database.Add(hashGetter(item), item);
+			m_database.Add(key, value);
+		}
+		public void Add(params TVal[] values) {
+			Add((IEnumerable<TVal>)values);
+		}
+		public void Add(IEnumerable<TVal> values) {
+			foreach (TVal value in values) {
+				Add(value);
 			}
 		}
-		public void Remove(FNVString db) {
-			m_database.Remove(db);
+		public void Remove(TKey key) {
+			m_database.Remove(key);
 		}
-
+		public void Remove(IEnumerable<TKey> keys) {
+			foreach (TKey key in keys) {
+				Remove(key);
+			}
+		}
 		public void Clear() {
 			m_database.Clear();
 		}
 
-		public TValue Get<TValue>(FNVString db, TKey id) {
-			if (m_database.ContainsKey(db)) {
-				return (TValue)m_database[db].Get(id);
+		public TVal Get(TKey key) {
+			if (m_database.ContainsKey(key)) {
+				return m_database[key];
 			} else {
 				throw new KeyNotFoundException(string.Format(
-					"No Database with name `{0}' exists", db
+					"No value with key `{0}' exists in the " +
+					"Database", key.ToString()
 				));
+			}
+		}
+		public TVal FindFirst(Predicate<TVal> query) {
+			foreach (TVal value in m_database.Values) {
+				if (query(value)) {
+					return value;
+				}
+			}
+			return null;
+		}
+		public IEnumerable<TVal> FindAll(Predicate<TVal> query) {
+			foreach (TVal value in m_database.Values) {
+				if (query(value)) {
+					yield return value;
+				}
 			}
 		}
 
-		public int GetCount(FNVString db) {
-			if (m_database.ContainsKey(db)) {
-				return m_database[db].Count;
-			} else {
-				throw new KeyNotFoundException(string.Format(
-					"No Database with name `{0}' exists", db
-				));
-			}
-		}
-
-		public bool Contains(FNVString db) {
-			return m_database.ContainsKey(db);
-		}
-		public bool Contains(FNVString db, TKey id) {
-			if (m_database.ContainsKey(db)) {
-				return m_database[db].Contains(id);
-			} else {
-				return false;
-			}
-		}
-		public IEnumerable<TKey> GetAllIds(FNVString db) {
-			if (m_database.ContainsKey(db)) {
-				return m_database[db].GetAllIds();
-			} else {
-				throw new KeyNotFoundException(string.Format(
-					"No Database with name `{0}' exists", db
-				));
-			}
+		public bool ContainsKey(TKey key) {
+			return m_database.ContainsKey(key);
 		}
 
 	}
