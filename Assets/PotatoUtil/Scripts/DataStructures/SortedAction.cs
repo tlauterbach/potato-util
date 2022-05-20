@@ -5,8 +5,6 @@ namespace PotatoUtil {
 
 	public class SortedAction {
 
-		private List<PrioritizedAction> m_actions;
-
 		private class PrioritizedAction {
 			public Action action { get; private set; }
 			public int Priority { get; private set; }
@@ -17,16 +15,23 @@ namespace PotatoUtil {
 			}
 		}
 
+		private List<PrioritizedAction> m_actions;
+		private List<PrioritizedAction> m_toRemove;
+		private List<PrioritizedAction> m_toAdd;
+
+		private bool m_isInvoking = false;
+
 		public SortedAction() {
 			m_actions = new List<PrioritizedAction>();
+			m_toAdd = new List<PrioritizedAction>();
+			m_toRemove = new List<PrioritizedAction>();
 		}
 
 		public void Register(Action handler, int priority) {
 			if (handler == null) {
 				throw new ArgumentNullException(nameof(handler));
 			}
-			m_actions.Add(new PrioritizedAction(handler, priority));
-			m_actions.Sort(PrioritySorter);
+			DoAdd(new PrioritizedAction(handler, priority));
 		}
 		public void Deregister(Action handler) {
 			if (handler == null) {
@@ -46,11 +51,17 @@ namespace PotatoUtil {
 				action.action();
 			}
 			m_isInvoking = false;
+			while (m_toAdd.Count > 0) {
+				m_actions.Add(m_toAdd[m_toAdd.Count - 1]);
+				m_toAdd.RemoveAt(m_toAdd.Count - 1);
+			}
 			while (m_toRemove.Count > 0) {
 				m_actions.Remove(m_toRemove[m_toRemove.Count - 1]);
 				m_toRemove.RemoveAt(m_toRemove.Count - 1);
 			}
+			m_toAdd.Clear();
 			m_toRemove.Clear();
+			m_actions.Sort(PrioritySorter);
 		}
 
 		public void Clear() {
@@ -59,6 +70,7 @@ namespace PotatoUtil {
 			} else {
 				m_actions.Clear();
 				m_toRemove.Clear();
+				m_toAdd.Clear();
 			}
 		}
 
@@ -66,8 +78,6 @@ namespace PotatoUtil {
 			return Math.Min(1, Math.Max(-1, y.Priority - x.Priority));
 		}
 
-		private bool m_isInvoking = false;
-		private List<PrioritizedAction> m_toRemove = new List<PrioritizedAction>();
 		private void DoRemove(PrioritizedAction action) {
 			if (m_isInvoking) {
 				m_toRemove.Add(action);
@@ -75,13 +85,19 @@ namespace PotatoUtil {
 				m_actions.Remove(action);
 			}
 		}
+		private void DoAdd(PrioritizedAction action) {
+			if (m_isInvoking) {
+				m_toAdd.Add(action);
+			} else {
+				m_actions.Add(action);
+				m_actions.Sort(PrioritySorter);
+			}
+		}
 
 	}
 
 
 	public class SortedAction<T> {
-
-		private List<PrioritizedAction> m_actions;
 
 		private class PrioritizedAction {
 			public Action<T> action { get; private set; }
@@ -93,6 +109,12 @@ namespace PotatoUtil {
 			}
 		}
 
+		private List<PrioritizedAction> m_actions;
+		private List<PrioritizedAction> m_toRemove;
+		private List<PrioritizedAction> m_toAdd;
+
+		private bool m_isInvoking = false;
+
 		public SortedAction() {
 			m_actions = new List<PrioritizedAction>();
 		}
@@ -101,8 +123,7 @@ namespace PotatoUtil {
 			if (handler == null) {
 				throw new ArgumentNullException(nameof(handler));
 			}
-			m_actions.Add(new PrioritizedAction(handler, priority));
-			m_actions.Sort(PrioritySorter);
+			DoAdd(new PrioritizedAction(handler, priority));
 		}
 		public void Deregister(Action<T> handler) {
 			if (handler == null) {
@@ -122,11 +143,17 @@ namespace PotatoUtil {
 				action.action(arg);
 			}
 			m_isInvoking = false;
+			while (m_toAdd.Count > 0) {
+				m_actions.Add(m_toAdd[m_toAdd.Count - 1]);
+				m_toAdd.RemoveAt(m_toAdd.Count - 1);
+			}
 			while (m_toRemove.Count > 0) {
 				m_actions.Remove(m_toRemove[m_toRemove.Count - 1]);
 				m_toRemove.RemoveAt(m_toRemove.Count - 1);
 			}
+			m_toAdd.Clear();
 			m_toRemove.Clear();
+			m_actions.Sort(PrioritySorter);
 		}
 
 		public void Clear() {
@@ -142,8 +169,6 @@ namespace PotatoUtil {
 			return Math.Min(1, Math.Max(-1, y.Priority - x.Priority));
 		}
 
-		private bool m_isInvoking = false;
-		private List<PrioritizedAction> m_toRemove = new List<PrioritizedAction>();
 		private void DoRemove(PrioritizedAction action) {
 			if (m_isInvoking) {
 				m_toRemove.Add(action);
@@ -152,6 +177,14 @@ namespace PotatoUtil {
 			}
 		}
 
+		private void DoAdd(PrioritizedAction action) {
+			if (m_isInvoking) {
+				m_toAdd.Add(action);
+			} else {
+				m_actions.Add(action);
+				m_actions.Sort(PrioritySorter);
+			}
+		}
 	}
 
 }
