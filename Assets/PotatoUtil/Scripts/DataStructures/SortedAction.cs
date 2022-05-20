@@ -117,6 +117,8 @@ namespace PotatoUtil {
 
 		public SortedAction() {
 			m_actions = new List<PrioritizedAction>();
+			m_toAdd = new List<PrioritizedAction>();
+			m_toRemove = new List<PrioritizedAction>();
 		}
 
 		public void Register(Action<T> handler, int priority) {
