@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace PotatoUtil {
 
@@ -8,7 +9,7 @@ namespace PotatoUtil {
 	/// </summary>
 	public static class HashLookup {
 
-		private static bool m_enabled = true;
+		private static bool m_enabled = false;
 		private static Dictionary<FNVHash, string> m_table = new Dictionary<FNVHash, string>();
 
 		public static bool Enabled {
@@ -25,6 +26,14 @@ namespace PotatoUtil {
 			if (!m_enabled || m_table.ContainsKey(hash)) {
 				return;
 			}
+			m_table.Add(hash, value);
+		}
+
+		public static void Register(FNVHash hash, StringBuilder builder) {
+			if (!m_enabled || m_table.ContainsKey(hash)) {
+				return;
+			}
+			string value = builder.ToString();
 			m_table.Add(hash, value);
 		}
 

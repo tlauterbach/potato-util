@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace PotatoUtil {
 
@@ -24,6 +25,16 @@ namespace PotatoUtil {
 			}
 			HashLookup.Register(this, str);
 		}
+		public FNVHash(StringBuilder builder) {
+			m_hash = OFFSET;
+			int ix = 0;
+			while (ix < builder.Length) {
+				m_hash ^= builder[ix];
+				m_hash *= PRIME;
+			}
+			HashLookup.Register(this, builder);
+		}
+
 		public FNVHash(SubString str) {
 			m_hash = OFFSET;
 			foreach (char c in str) {
