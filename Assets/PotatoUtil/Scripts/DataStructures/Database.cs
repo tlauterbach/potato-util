@@ -113,6 +113,10 @@ namespace PotatoUtil {
 			return m_database.ContainsKey(key);
 		}
 
+		public ReadOnlyDatabase<TKey,TVal> AsReadOnly() {
+			return new ReadOnlyDatabase<TKey,TVal>(this);
+		}
+
 	}
 
 }
