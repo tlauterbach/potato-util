@@ -93,6 +93,11 @@ namespace PotatoUtil {
 				));
 			}
 		}
+
+		public bool TryGet(TKey key, out TVal value) {
+			return m_database.TryGetValue(key, out value);
+		}
+
 		public TVal FindFirst(Predicate<TVal> query) {
 			foreach (TVal value in m_database.Values) {
 				if (query(value)) {
